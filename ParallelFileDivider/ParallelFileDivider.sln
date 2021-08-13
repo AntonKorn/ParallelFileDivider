@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelFileDivider", "ParallelFileDivider\ParallelFileDivider.csproj", "{51E2F781-BD8A-4569-BEDE-B1EFA25E5A54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelFileDivider.Core", "ParallelFileDivider.Core\ParallelFileDivider.Core.csproj", "{46B889E1-0BB3-4569-9B23-D0BFA2A9A2AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51E2F781-BD8A-4569-BEDE-B1EFA25E5A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E2F781-BD8A-4569-BEDE-B1EFA25E5A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E2F781-BD8A-4569-BEDE-B1EFA25E5A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51E2F781-BD8A-4569-BEDE-B1EFA25E5A54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B889E1-0BB3-4569-9B23-D0BFA2A9A2AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B889E1-0BB3-4569-9B23-D0BFA2A9A2AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B889E1-0BB3-4569-9B23-D0BFA2A9A2AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B889E1-0BB3-4569-9B23-D0BFA2A9A2AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF179E70-1B06-40BB-ABB9-DD55009C72C5}
+	EndGlobalSection
+EndGlobal

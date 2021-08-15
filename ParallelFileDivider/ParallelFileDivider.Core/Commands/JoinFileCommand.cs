@@ -10,5 +10,6 @@ namespace ParallelFileDivider.Core.Commands
     {
         public string SourceFolderPath { get; set; }
         public string DestinationPath { get; set; }
+        public int BufferSize { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace ParallelFileDivider.Core.Commands
         public string DestinationPath { get; set; }
         public int PartsCount { get; set; }
         public int ParallelStreamsCount { get; set; }
-        public int BufferSize { get; set; }
+        public long BufferSize { get; set; } = 50000;
     }
 }

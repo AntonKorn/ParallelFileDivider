@@ -9,7 +9,7 @@ namespace ParallelFileDivider.Core.Contracts
 {
     public interface IFileDivider
     {
-        Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, int bufferSize);
-        Task<FileOperationResult> JoinFile(string folderPath, string destinationPath);
+        Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, long bufferSize);
+        Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize);
     }
 }

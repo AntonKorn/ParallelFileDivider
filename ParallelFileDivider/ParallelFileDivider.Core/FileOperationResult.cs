@@ -8,5 +8,7 @@ namespace ParallelFileDivider.Core
 {
     public class FileOperationResult
     {
+        public bool IsComplete { get; set; } = true;
+        public string[] Messages { get; set; }
     }
 }

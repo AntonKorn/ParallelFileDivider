@@ -1,3 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
+using ParallelFileDivider.Core;
+using ParallelFileDivider.Core.Contracts;
+using ParallelFileDivider.Core.Helpers;
+using ParallelFileDivider.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +22,21 @@ namespace ParallelFileDivider
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var services = new ServiceCollection();
+
+            ConfigureServices(services);
+
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                Application.Run(serviceProvider.GetRequiredService<MainForm>());
+            }
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            MicrosoftDependencyInjectionHelper.RegisterServices(services);
+            services.AddScoped<MainForm>();
         }
     }
 }

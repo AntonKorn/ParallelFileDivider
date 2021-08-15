@@ -1,4 +1,5 @@
 ﻿using ParallelFileDivider.Core.Commands;
+using ParallelFileDivider.Core.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace ParallelFileDivider.Core.Contracts
     {
         Task<FileOperationResult> DivideFile(DivideFileCommand divideFileCommand);
         Task<FileOperationResult> JoinFile(JoinFileCommand joinFileCommand);
+        DivisionOptionsSummary GetDivisionOptionsSummary(DivisionOptionsSummaryQuery divisionOptionsSummaryQuery);
     }
 }

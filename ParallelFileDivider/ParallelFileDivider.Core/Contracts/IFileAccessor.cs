@@ -16,5 +16,6 @@ namespace ParallelFileDivider.Core.Contracts
         bool IsFolderExist(string path);
         bool IsFileExist(string path);
         IEnumerable<string> GetFileNames(string directory,string query);
+        bool IsDirectoryEmpty(string directory);
     }
 }

@@ -44,5 +44,10 @@ namespace ParallelFileDivider.Core
         {
             return Directory.GetFiles(directory, query);
         }
+
+        public bool IsDirectoryEmpty(string directory)
+        {
+            return !Directory.Exists(directory) || !Directory.EnumerateFileSystemEntries(directory).Any();
+        }
     }
 }

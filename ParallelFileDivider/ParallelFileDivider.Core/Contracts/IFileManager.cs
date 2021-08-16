@@ -13,5 +13,7 @@ namespace ParallelFileDivider.Core.Contracts
         Task<FileOperationResult> DivideFile(DivideFileCommand divideFileCommand);
         Task<FileOperationResult> JoinFile(JoinFileCommand joinFileCommand);
         DivisionOptionsSummary GetDivisionOptionsSummary(DivisionOptionsSummaryQuery divisionOptionsSummaryQuery);
+        JoinOptionsSummary GetJoinOptionsSummary(JoinFileOptionsSummaryQuery joinFileOptionsSummaryQuery);
+        bool IsJoinCommandValid(JoinFileCommand joinFileCommand);
     }
 }

@@ -33,8 +33,10 @@ namespace ParallelFileDivider.Forms
             this.tbpDivide = new System.Windows.Forms.TabPage();
             this.divideFileControl = new ParallelFileDivider.Components.DivideFileControl();
             this.tbpJoin = new System.Windows.Forms.TabPage();
+            this.joinFilesControl1 = new ParallelFileDivider.Components.JoinFilesControl();
             this.tbcMain.SuspendLayout();
             this.tbpDivide.SuspendLayout();
+            this.tbpJoin.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbcMain
@@ -70,6 +72,7 @@ namespace ParallelFileDivider.Forms
             // 
             // tbpJoin
             // 
+            this.tbpJoin.Controls.Add(this.joinFilesControl1);
             this.tbpJoin.Location = new System.Drawing.Point(4, 34);
             this.tbpJoin.Name = "tbpJoin";
             this.tbpJoin.Padding = new System.Windows.Forms.Padding(3);
@@ -77,6 +80,13 @@ namespace ParallelFileDivider.Forms
             this.tbpJoin.TabIndex = 1;
             this.tbpJoin.Text = "Join";
             this.tbpJoin.UseVisualStyleBackColor = true;
+            // 
+            // joinFilesControl1
+            // 
+            this.joinFilesControl1.Location = new System.Drawing.Point(4, 6);
+            this.joinFilesControl1.Name = "joinFilesControl1";
+            this.joinFilesControl1.Size = new System.Drawing.Size(730, 566);
+            this.joinFilesControl1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -88,6 +98,7 @@ namespace ParallelFileDivider.Forms
             this.Text = "Divide files";
             this.tbcMain.ResumeLayout(false);
             this.tbpDivide.ResumeLayout(false);
+            this.tbpJoin.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -98,5 +109,6 @@ namespace ParallelFileDivider.Forms
         private System.Windows.Forms.TabPage tbpDivide;
         private System.Windows.Forms.TabPage tbpJoin;
         private Components.DivideFileControl divideFileControl;
+        private Components.JoinFilesControl joinFilesControl1;
     }
 }

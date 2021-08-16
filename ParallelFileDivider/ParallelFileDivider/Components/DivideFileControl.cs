@@ -115,7 +115,7 @@ namespace ParallelFileDivider.Components
                 lblDirectoryWarning.Hide();
             }
 
-            if (isFileValid)
+            if (isFileValid || isDestinationFolderSet)
             {
                 var query = new DivisionOptionsSummaryQuery()
                 {
@@ -126,28 +126,16 @@ namespace ParallelFileDivider.Components
 
                 var fileSummary = _fileManager.GetDivisionOptionsSummary(query);
 
-                if (fileSummary.IsDirectoryInUse)
-                {
-                    lblDirectoryWarning.Show();
-                }
-                else
-                {
-                    lblDirectoryWarning.Hide();
-                }
+                lblDirectoryWarning.Visible = fileSummary.IsDirectoryInUse && isDestinationFolderSet;
+                lblInvalidFileWarning.Visible = !fileSummary.IsFileValid && isFileNameSet;
+                pnlFileInfo.Visible = fileSummary.IsFileValid;
 
-                if (!fileSummary.IsFileValid)
-                {
-                    lblInvalidFileWarning.Show();
-                    isFileValid = false;
-                }
+                isFileValid = fileSummary.IsFileValid;
 
                 if (isFileValid)
                 {
                     lblApproximateFileSize.Text = (fileSummary.TargetFileSizeInBytes / 1024 / 1024).ToString();
                     lblApproximatePartSize.Text = (fileSummary.ApproximatePartSizeInBytes / 1024).ToString();
-                    pnlFileInfo.Show();
-
-                    lblInvalidFileWarning.Hide();
                 }
             }
 

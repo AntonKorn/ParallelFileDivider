@@ -17,6 +17,7 @@ namespace ParallelFileDivider.Forms
         {
             InitializeComponent();
             divideFileControl.ConfigureDependencies(serviceProvider);
+            joinFilesControl1.ConfigureDependencies(serviceProvider);
         }
     }
 }

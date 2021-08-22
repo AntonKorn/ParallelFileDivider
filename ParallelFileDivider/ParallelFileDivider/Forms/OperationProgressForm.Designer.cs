@@ -99,7 +99,7 @@ namespace ParallelFileDivider.Forms
             // 
             // tmrUpdateProgress
             // 
-            this.tmrUpdateProgress.Interval = 500;
+            this.tmrUpdateProgress.Interval = 1000;
             this.tmrUpdateProgress.Tick += new System.EventHandler(this.tmrUpdateProgress_Tick);
             // 
             // multiWorkersProgressControl

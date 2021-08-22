@@ -79,14 +79,18 @@ namespace ParallelFileDivider.Forms
 
         private void UpdateProgressComponents()
         {
-            var overallProgress = _workersProgress.Sum();
-            prbOverallProgress.Value = overallProgress;
-
-            var maxProgress = _workersProgress.Length * MaxWorkerProgress;
-            var percents = overallProgress / (maxProgress + .0) * 100;
-            lblPercentage.Text = string.Format("{0:0.00}%", percents);
-
-            multiWorkersProgressControl.UpdateProgress(_workersProgress, MaxWorkerProgress);
+            Task.Run(() =>
+            {
+                var overallProgress = _workersProgress.Sum();
+                var maxProgress = _workersProgress.Length * MaxWorkerProgress;
+                var percents = overallProgress / (maxProgress + .0) * 100;
+                Invoke((MethodInvoker)(() =>
+                {
+                    prbOverallProgress.Value = overallProgress;
+                    lblPercentage.Text = string.Format("{0:0.00}%", percents);
+                    multiWorkersProgressControl.UpdateProgress(_workersProgress, MaxWorkerProgress);
+                }));
+            });
         }
 
         private void btnOk_Click(object sender, EventArgs e)

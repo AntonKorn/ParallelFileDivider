@@ -1,5 +1,6 @@
 ﻿using ParallelFileDivider.Core.Commands;
 using ParallelFileDivider.Core.Contracts;
+using ParallelFileDivider.Core.Dto;
 using ParallelFileDivider.Core.Exceptions;
 using ParallelFileDivider.Core.Queries;
 using System;
@@ -51,27 +52,45 @@ namespace ParallelFileDivider.Core
 
         }
 
-        public Task<FileOperationResult> JoinFile(JoinFileCommand joinFileCommand)
+        public async Task<FileOperationResult> JoinFile(JoinFileCommand joinFileCommand)
         {
             try
             {
-                return _fileDivider.JoinFile(joinFileCommand.SourceFolderPath, joinFileCommand.DestinationPath, joinFileCommand.BufferSize);
+                var isOperationProgressCalculated = joinFileCommand.ProgressChangedCallback != null;
+
+                var operationProgressObservable = isOperationProgressCalculated
+                    ? new JoinProgressObsererDto()
+                    {
+                        ExpectedProgressPrecision = joinFileCommand.ExpectedProgressPrecision,
+                        ProgressChangedCallback = joinFileCommand.ProgressChangedCallback
+                    }
+                    : null;
+
+                if (isOperationProgressCalculated)
+                {
+                    operationProgressObservable.ExpectedDestiationFileSize = await CalculateTotalPartsSizeAsync(joinFileCommand.SourceFolderPath);
+                }
+
+                return await _fileDivider.JoinFile(joinFileCommand.SourceFolderPath,
+                    joinFileCommand.DestinationPath,
+                    joinFileCommand.BufferSize,
+                    operationProgressObservable);
             }
             catch (FileOperationException ex)
             {
-                return Task.FromResult(new FileOperationResult()
+                return new FileOperationResult()
                 {
                     IsComplete = false,
                     Messages = new string[] { ex.Message }
-                });
+                };
             }
             catch (Exception)
             {
-                return Task.FromResult(new FileOperationResult()
+                return new FileOperationResult()
                 {
                     IsComplete = false,
                     Messages = new string[] { "Unexpected error occurred" }
-                });
+                };
             }
         }
 
@@ -158,6 +177,14 @@ namespace ParallelFileDivider.Core
                     IsFileInUse = false
                 };
             }
+        }
+
+        private Task<long> CalculateTotalPartsSizeAsync(string path)
+        {
+            return Task.Run(() => _fileAccessor
+                .GetFileNames(path, "*.prt")
+                .Select(fileName => _fileAccessor.GetFileSize(fileName))
+                .Sum());
         }
     }
 }

@@ -45,6 +45,7 @@ namespace ParallelFileDivider.Components
             this.label3 = new System.Windows.Forms.Label();
             this.btnJoin = new System.Windows.Forms.Button();
             this.tmrValidityRefresh = new System.Windows.Forms.Timer(this.components);
+            this.operationProgressComponent = new ParallelFileDivider.Components.OperationProgressComponent(this.components);
             this.pnlDirectorySummary.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -182,6 +183,10 @@ namespace ParallelFileDivider.Components
             this.tmrValidityRefresh.Interval = 1500;
             this.tmrValidityRefresh.Tick += new System.EventHandler(this.tmrValidityRefresh_Tick);
             // 
+            // operationProgressComponent
+            // 
+            this.operationProgressComponent.OperationTitle = "Joining Progress";
+            // 
             // JoinFilesControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -221,5 +226,6 @@ namespace ParallelFileDivider.Components
         private System.Windows.Forms.Label lblInvalidDirectory;
         private System.Windows.Forms.Label lblFileInUse;
         private System.Windows.Forms.Timer tmrValidityRefresh;
+        private OperationProgressComponent operationProgressComponent;
     }
 }

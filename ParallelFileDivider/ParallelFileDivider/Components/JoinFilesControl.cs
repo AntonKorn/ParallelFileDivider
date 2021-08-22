@@ -59,17 +59,19 @@ namespace ParallelFileDivider.Components
             if (_fileManager.IsJoinCommandValid(GetJoinCommand()))
             {
                 OperationStarted();
+                var joinCommand = GetJoinCommand();
 
-                var result = await _fileManager.JoinFile(GetJoinCommand());
+                var maxProgress = 10000;
 
-                if (result.IsComplete)
-                {
-                    MessageBox.Show("Files joined successfully");
-                }
-                else
-                {
-                    MessageBox.Show(string.Join(Environment.NewLine, result.Messages));
-                }
+                joinCommand.ExpectedProgressPrecision = maxProgress;
+                joinCommand.ProgressChangedCallback =
+                    status => operationProgressComponent.UpdateProgress(status.WorkerNumber, status.Progress);
+
+                operationProgressComponent.StartProgress(1, maxProgress);
+
+                var result = await _fileManager.JoinFile(joinCommand);
+
+                operationProgressComponent.FinishProgress(result.Messages, result.IsComplete);
 
                 OperationFinished();
             }

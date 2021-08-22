@@ -11,5 +11,7 @@ namespace ParallelFileDivider.Core.Commands
         public string SourceFolderPath { get; set; }
         public string DestinationPath { get; set; }
         public int BufferSize { get; set; }
+        public Action<(int Progress, int WorkerNumber)> ProgressChangedCallback { get; set; }
+        public int ExpectedProgressPrecision { get; set; } = 10000;
     }
 }

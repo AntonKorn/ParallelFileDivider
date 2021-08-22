@@ -14,5 +14,6 @@ namespace ParallelFileDivider.Core.Contracts
 
         Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, long bufferSize, DivisionProgressObserverDto progress);
         Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize);
+        Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize, JoinProgressObsererDto progress);
     }
 }

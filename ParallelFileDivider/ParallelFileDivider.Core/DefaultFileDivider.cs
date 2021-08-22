@@ -69,7 +69,12 @@ namespace ParallelFileDivider.Core
             };
         }
 
-        public async Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize)
+        public Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize)
+        {
+            return JoinFile(folderPath, destinationPath, bufferSize, null);
+        }
+
+        public async Task<FileOperationResult> JoinFile(string folderPath, string destinationPath, int bufferSize, JoinProgressObsererDto progressObserver)
         {
             if (!_fileAccessor.IsFolderExist(folderPath))
             {
@@ -89,6 +94,7 @@ namespace ParallelFileDivider.Core
                 });
 
             var bytes = new byte[bufferSize];
+            var totalRead = 0L;
             using (var destinationStream = _fileAccessor.OpenFileForWrite(destinationPath))
             {
                 foreach (var partFilePath in partFiles)
@@ -98,7 +104,14 @@ namespace ParallelFileDivider.Core
                         var read = 0;
                         while ((read = await partStream.ReadAsync(bytes)) > 0)
                         {
+                            totalRead += read;
                             await destinationStream.WriteAsync(bytes, 0, read);
+
+                            if (progressObserver != null)
+                            {
+                                var progress = totalRead / (progressObserver.ExpectedDestiationFileSize + .0) * progressObserver.ExpectedProgressPrecision;
+                                progressObserver?.ProgressChangedCallback?.Invoke(((int)progress, 0));
+                            }
                         }
                     }
                 }

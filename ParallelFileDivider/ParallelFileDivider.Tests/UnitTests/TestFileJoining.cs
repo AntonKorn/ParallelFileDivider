@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ParallelFileDivider.Core;
+using ParallelFileDivider.Core.Dto;
 using ParallelFileDivider.Core.Exceptions;
 using ParallelFileDivider.Tests.Helpers;
 using System;
@@ -43,6 +44,39 @@ namespace ParallelFileDivider.Tests.UnitTests
 
             Assert.IsTrue(result.IsComplete);
             Assert.AreEqual(expectedResult, destinationStreams[0].ToArray());
+        }
+
+        [Test]
+        public async Task FileDivider_should_JoinFiles_in_one_stream_correctly_with_progress()
+        {
+
+            var fileAccessorMock = FileAccesorMockUtils.CreateFileAccessorMockWithRandomJoinSource(
+                _destinationFile,
+                _sourceFolder,
+                DESTINATION_FILE_SIZE,
+                FILES_COUNT,
+                1,
+                out var sourceBufers,
+                out var destinationStreams);
+
+            var progressPrecision = 10000;
+            var progressUpdates = new List<int>();
+            var progressObserver = new JoinProgressObsererDto()
+            {
+                ExpectedDestiationFileSize = DESTINATION_FILE_SIZE,
+                ExpectedProgressPrecision = progressPrecision,
+                ProgressChangedCallback = status => progressUpdates.Add(status.Progress)
+            };
+
+            var expectedResult = sourceBufers.Aggregate((first, second) => Enumerable.Concat(first, second).ToArray());
+            var fileDivider = new DefaultFileDivider(fileAccessorMock.Object);
+
+            var result = await fileDivider.JoinFile(_sourceFolder, _destinationFile, BUFFER_SIZE, progressObserver);
+
+            Assert.IsTrue(result.IsComplete);
+            Assert.AreEqual(expectedResult, destinationStreams[0].ToArray());
+            Assert.AreEqual(progressPrecision, progressUpdates.Max());
+            FileDividerUtils.AssertIsInAscendingOrder(progressUpdates);
         }
 
         [Test]

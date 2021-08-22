@@ -101,7 +101,7 @@ namespace ParallelFileDivider.Tests.UnitTests
             foreach (var progressUpdates in progressUpdatesLists)
             {
                 Assert.AreEqual(progressPrecision, progressUpdates.Max());
-                AssertIsInAscendingOrder(progressUpdates);
+                FileDividerUtils.AssertIsInAscendingOrder(progressUpdates);
             }
         }
 
@@ -129,12 +129,6 @@ namespace ParallelFileDivider.Tests.UnitTests
                 .Repeat<List<int>>(null, parallelThreads)
                 .Select(_ => new List<int>())
                 .ToArray();
-        }
-
-        private void AssertIsInAscendingOrder(List<int> updates)
-        {
-            var orderedUpdates = updates.OrderBy(i => i).ToList();
-            Assert.IsTrue(orderedUpdates.SequenceEqual(updates));
         }
     }
 }

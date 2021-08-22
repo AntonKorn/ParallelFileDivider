@@ -1,4 +1,5 @@
 ﻿using ParallelFileDivider.Core.Contracts;
+using ParallelFileDivider.Core.Dto;
 using ParallelFileDivider.Core.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,13 @@ namespace ParallelFileDivider.Core
             _fileAccessor = fileAccessor ?? throw new ArgumentNullException(nameof(fileAccessor));
         }
 
-        public async Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, long bufferSize)
+        public Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, long bufferSize)
+        {
+            var progress = new DivisionProgressObserverDto();
+            return DivideFile(sourcePath, destinationPath, partsCount, parallelStreamsCount, bufferSize, progress);
+        }
+
+        public async Task<FileOperationResult> DivideFile(string sourcePath, string destinationPath, int partsCount, int parallelStreamsCount, long bufferSize, DivisionProgressObserverDto progressObserver)
         {
             if (!_fileAccessor.IsFileExist(sourcePath))
             {
@@ -38,7 +45,21 @@ namespace ParallelFileDivider.Core
                     var partsForCurrentStream = i == parallelStreamsCount - 1
                         ? partsCount - previousPartsCount
                         : partsPerStream;
-                    return DivideFilePart(sourcePath, destinationPath, previousPartsCount, partsForCurrentStream, partsCount, sourceSize, bufferSize);
+
+                    void workerCallback((long Expected, long Current) status)
+                    {
+                        var progress = status.Current / (status.Expected + .0) * progressObserver.ExpectedProgressPrecision;
+                        progressObserver.ProgressChangedCallback(((int)progress, i));
+                    }
+
+                    return DivideFilePart(sourcePath,
+                        destinationPath,
+                        previousPartsCount,
+                        partsForCurrentStream,
+                        partsCount,
+                        sourceSize,
+                        bufferSize,
+                        progressObserver.ProgressChangedCallback != null ? workerCallback : null);
                 });
             await Task.WhenAll(tasks);
 
@@ -86,18 +107,22 @@ namespace ParallelFileDivider.Core
             return new FileOperationResult() { IsComplete = true };
         }
 
-        private async Task DivideFilePart(string sourcePath, string destinationPath, int startFrom, int count, int totalPartsCount, long sourceSize, long bufferSize)
+        private async Task DivideFilePart(string sourcePath, string destinationPath, int startFrom, int count, int totalPartsCount, long sourceSize, long bufferSize, Action<(long Expected, long Current)> progressCallback)
         {
 
             var nonLastPartSize = sourceSize / totalPartsCount;
             var offset = nonLastPartSize * startFrom;
             var destinationFileSize = sourceSize / totalPartsCount;
+            long totalRead = offset;
+
+            var expectedLength = (startFrom + count == totalPartsCount)
+                ? sourceSize - totalRead
+                : count * destinationFileSize;
 
             using (var sourceStream = _fileAccessor.OpenFileForRead(sourcePath, true))
             {
                 sourceStream.Seek(offset, SeekOrigin.Begin);
 
-                long totalRead = offset;
                 for (long iPart = startFrom; iPart < startFrom + count; iPart++)
                 {
                     var isLastPart = iPart == totalPartsCount - 1;
@@ -112,6 +137,8 @@ namespace ParallelFileDivider.Core
                             var bytes = new byte[currentChunkSize];
                             var read = await sourceStream.ReadAsync(bytes);
                             totalRead += read;
+
+                            progressCallback?.Invoke((expectedLength, totalRead - offset));
 
                             await destinationStream.WriteAsync(bytes, 0, read);
                         }

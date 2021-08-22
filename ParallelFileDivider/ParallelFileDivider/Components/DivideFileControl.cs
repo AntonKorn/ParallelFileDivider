@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -64,24 +65,28 @@ namespace ParallelFileDivider.Components
             {
                 OperationStarted();
 
+                var maxProgress = 10000;
+
                 var divideCommand = new DivideFileCommand()
                 {
                     BufferSize = 50000,
                     DestinationPath = tbDestinationFolder.Text,
                     ParallelStreamsCount = (int)nudParallelThreads.Value,
                     PartsCount = (int)nudFilesCount.Value,
-                    SourcePath = tbFileName.Text
+                    SourcePath = tbFileName.Text,
+                    DivisionProgressObserver = new Core.Dto.DivisionProgressObserverDto()
+                    {
+                        ExpectedProgressPrecision = maxProgress,
+                        ProgressChangedCallback =
+                            progress => operationProgressComponent.UpdateProgress(progress.WorkerNumber, progress.Progress)
+                    }
                 };
 
+                operationProgressComponent.StartProgress((int)nudParallelThreads.Value, maxProgress);
+
                 var result = await _fileManager.DivideFile(divideCommand);
-                if (!result.IsComplete)
-                {
-                    MessageBox.Show(string.Join(Environment.NewLine, result.Messages));
-                }
-                else
-                {
-                    MessageBox.Show("File successfully divided.");
-                }
+
+                operationProgressComponent.FinishProgress(result.Messages, result.IsComplete);
 
                 OperationFinished();
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParallelFileDivider.Core.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace ParallelFileDivider.Core.Commands
         public int PartsCount { get; set; }
         public int ParallelStreamsCount { get; set; }
         public long BufferSize { get; set; } = 50000;
+        public DivisionProgressObserverDto DivisionProgressObserver { get; set; } = new DivisionProgressObserverDto();
     }
 }

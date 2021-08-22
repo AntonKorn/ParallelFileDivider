@@ -53,6 +53,7 @@ namespace ParallelFileDivider.Components
             this.tmrUpdateSummaryAndValidate = new System.Windows.Forms.Timer(this.components);
             this.ofdSourceFile = new System.Windows.Forms.OpenFileDialog();
             this.fbdDestinationFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.operationProgressComponent = new ParallelFileDivider.Components.OperationProgressComponent(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nudParallelThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudFilesCount)).BeginInit();
             this.pnlFileInfo.SuspendLayout();
@@ -287,6 +288,10 @@ namespace ParallelFileDivider.Components
             // 
             this.ofdSourceFile.FileName = "openFileDialog1";
             // 
+            // operationProgressComponent
+            // 
+            this.operationProgressComponent.OperationTitle = "Division Progress";
+            // 
             // DivideFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -343,5 +348,6 @@ namespace ParallelFileDivider.Components
         private System.Windows.Forms.Timer tmrUpdateSummaryAndValidate;
         private System.Windows.Forms.OpenFileDialog ofdSourceFile;
         private System.Windows.Forms.FolderBrowserDialog fbdDestinationFolder;
+        private OperationProgressComponent operationProgressComponent;
     }
 }

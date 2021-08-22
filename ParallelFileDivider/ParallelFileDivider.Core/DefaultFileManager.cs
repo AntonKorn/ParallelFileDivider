@@ -29,7 +29,8 @@ namespace ParallelFileDivider.Core
                     divideFileCommand.DestinationPath,
                     divideFileCommand.PartsCount,
                     divideFileCommand.ParallelStreamsCount,
-                    divideFileCommand.BufferSize);
+                    divideFileCommand.BufferSize,
+                    divideFileCommand.DivisionProgressObserver);
             }
             catch (FileOperationException ex)
             {

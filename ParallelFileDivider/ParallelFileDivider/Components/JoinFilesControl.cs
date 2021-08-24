@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -62,12 +63,14 @@ namespace ParallelFileDivider.Components
                 var joinCommand = GetJoinCommand();
 
                 var maxProgress = 10000;
+                var cancellationTokenSource = new CancellationTokenSource();
 
                 joinCommand.ExpectedProgressPrecision = maxProgress;
                 joinCommand.ProgressChangedCallback =
                     status => operationProgressComponent.UpdateProgress(status.WorkerNumber, status.Progress);
+                joinCommand.CancellationToken = cancellationTokenSource.Token;
 
-                operationProgressComponent.StartProgress(1, maxProgress);
+                operationProgressComponent.StartProgress(1, maxProgress, cancellationTokenSource);
 
                 var result = await _fileManager.JoinFile(joinCommand);
 

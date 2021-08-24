@@ -46,7 +46,7 @@ namespace ParallelFileDivider.Core
                 return new FileOperationResult()
                 {
                     IsComplete = false,
-                    Messages = new string[] { "Operation canceled by user." }
+                    Messages = new string[] { "Operation was cancelled by user." }
                 };
             }
             catch (Exception)
@@ -70,7 +70,8 @@ namespace ParallelFileDivider.Core
                     ? new JoinProgressObsererDto()
                     {
                         ExpectedProgressPrecision = joinFileCommand.ExpectedProgressPrecision,
-                        ProgressChangedCallback = joinFileCommand.ProgressChangedCallback
+                        ProgressChangedCallback = joinFileCommand.ProgressChangedCallback,
+                        CancellationToken = joinFileCommand.CancellationToken
                     }
                     : null;
 
@@ -90,6 +91,14 @@ namespace ParallelFileDivider.Core
                 {
                     IsComplete = false,
                     Messages = new string[] { ex.Message }
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                return new FileOperationResult()
+                {
+                    IsComplete = false,
+                    Messages = new string[] { "Operation was cancelled by user." }
                 };
             }
             catch (Exception)

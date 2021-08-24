@@ -104,10 +104,12 @@ namespace ParallelFileDivider.Core
                     using (var partStream = _fileAccessor.OpenFileForRead(partFilePath, false))
                     {
                         var read = 0;
-                        while ((read = await partStream.ReadAsync(bytes)) > 0)
+                        while ((read = await partStream.ReadAsync(bytes, progressObserver.CancellationToken)) > 0)
                         {
+                            progressObserver.CancellationToken.ThrowIfCancellationRequested();
+
                             totalRead += read;
-                            await destinationStream.WriteAsync(bytes, 0, read);
+                            await destinationStream.WriteAsync(bytes, 0, read, progressObserver.CancellationToken);
 
                             if (progressObserver != null)
                             {

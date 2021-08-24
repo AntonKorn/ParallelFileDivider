@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ParallelFileDivider.Components
@@ -12,6 +13,7 @@ namespace ParallelFileDivider.Components
     public partial class OperationProgressComponent : Component
     {
         private OperationProgressForm _operationProgressForm = new OperationProgressForm();
+        private CancellationTokenSource _cancellationTokenSource;
 
         public string OperationTitle { get; set; }
 
@@ -29,8 +31,9 @@ namespace ParallelFileDivider.Components
             RegisterEventHandlers();
         }
 
-        public void StartProgress(int workersCount, int maxProgress)
+        public void StartProgress(int workersCount, int maxProgress, CancellationTokenSource cancellationTokenSource = null)
         {
+            _cancellationTokenSource = cancellationTokenSource;
             UpdateFormProps();
 
             _operationProgressForm.Show();
@@ -46,17 +49,28 @@ namespace ParallelFileDivider.Components
 
         public void FinishProgress(string[] messages, bool isComplete)
         {
+            _cancellationTokenSource = null;
             _operationProgressForm.FinishOperation(messages, isComplete);
         }
 
         private void UpdateFormProps()
         {
             _operationProgressForm.Title = OperationTitle;
+            _operationProgressForm.CanCancel = _cancellationTokenSource != null;
         }
 
         private void RegisterEventHandlers()
         {
             _operationProgressForm.OkClicked += _operationProgressForm_OkClicked;
+            _operationProgressForm.CancelClicked += _operationProgressForm_CancelClicked;
+        }
+
+        private void _operationProgressForm_CancelClicked(object sender, EventArgs e)
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
         }
 
         private void _operationProgressForm_OkClicked(object sender, EventArgs e)

@@ -40,6 +40,7 @@ namespace ParallelFileDivider.Forms
             this.multiWorkersProgressControl = new ParallelFileDivider.Components.MultiWorkersProgressControl();
             this.label3 = new System.Windows.Forms.Label();
             this.pnlMultipleThreads = new System.Windows.Forms.Panel();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.pnlMultipleThreads.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,12 +133,23 @@ namespace ParallelFileDivider.Forms
             this.pnlMultipleThreads.Size = new System.Drawing.Size(759, 150);
             this.pnlMultipleThreads.TabIndex = 9;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(15, 459);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(112, 34);
+            this.btnCancel.TabIndex = 10;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // OperationProgressForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(783, 505);
             this.ControlBox = false;
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.pnlMultipleThreads);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.lblPercentage);
@@ -166,5 +178,6 @@ namespace ParallelFileDivider.Forms
         private Components.MultiWorkersProgressControl multiWorkersProgressControl;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel pnlMultipleThreads;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

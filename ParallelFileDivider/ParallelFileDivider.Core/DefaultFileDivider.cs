@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ParallelFileDivider.Core
@@ -59,7 +60,8 @@ namespace ParallelFileDivider.Core
                         partsCount,
                         sourceSize,
                         bufferSize,
-                        progressObserver.ProgressChangedCallback != null ? workerCallback : null);
+                        progressObserver.ProgressChangedCallback != null ? workerCallback : null,
+                        progressObserver.CancellationToken);
                 });
             await Task.WhenAll(tasks);
 
@@ -120,7 +122,7 @@ namespace ParallelFileDivider.Core
             return new FileOperationResult() { IsComplete = true };
         }
 
-        private async Task DivideFilePart(string sourcePath, string destinationPath, int startFrom, int count, int totalPartsCount, long sourceSize, long bufferSize, Action<(long Expected, long Current)> progressCallback)
+        private async Task DivideFilePart(string sourcePath, string destinationPath, int startFrom, int count, int totalPartsCount, long sourceSize, long bufferSize, Action<(long Expected, long Current)> progressCallback, CancellationToken cancellationToken)
         {
 
             var nonLastPartSize = sourceSize / totalPartsCount;
@@ -148,7 +150,8 @@ namespace ParallelFileDivider.Core
                         {
                             currentChunkSize = Math.Min(bufferSize, partSize - completedChunksSize);
                             var bytes = new byte[currentChunkSize];
-                            var read = await sourceStream.ReadAsync(bytes);
+                            cancellationToken.ThrowIfCancellationRequested();
+                            var read = await sourceStream.ReadAsync(bytes, cancellationToken);
                             totalRead += read;
 
                             progressCallback?.Invoke((expectedLength, totalRead - offset));

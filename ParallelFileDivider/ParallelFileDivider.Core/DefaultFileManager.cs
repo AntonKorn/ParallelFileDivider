@@ -22,11 +22,11 @@ namespace ParallelFileDivider.Core
             _fileAccessor = fileAccessor;
         }
 
-        public Task<FileOperationResult> DivideFile(DivideFileCommand divideFileCommand)
+        public async Task<FileOperationResult> DivideFile(DivideFileCommand divideFileCommand)
         {
             try
             {
-                return _fileDivider.DivideFile(divideFileCommand.SourcePath,
+                return await _fileDivider.DivideFile(divideFileCommand.SourcePath,
                     divideFileCommand.DestinationPath,
                     divideFileCommand.PartsCount,
                     divideFileCommand.ParallelStreamsCount,
@@ -35,19 +35,27 @@ namespace ParallelFileDivider.Core
             }
             catch (FileOperationException ex)
             {
-                return Task.FromResult(new FileOperationResult()
+                return new FileOperationResult()
                 {
                     IsComplete = false,
                     Messages = new string[] { ex.Message }
-                });
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                return new FileOperationResult()
+                {
+                    IsComplete = false,
+                    Messages = new string[] { "Operation canceled by user." }
+                };
             }
             catch (Exception)
             {
-                return Task.FromResult(new FileOperationResult()
+                return new FileOperationResult()
                 {
                     IsComplete = false,
                     Messages = new string[] { "Unexpected error occurred" }
-                });
+                };
             }
 
         }

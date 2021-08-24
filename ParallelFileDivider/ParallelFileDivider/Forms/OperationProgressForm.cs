@@ -16,10 +16,12 @@ namespace ParallelFileDivider.Forms
         public string Title { get; set; }
         public bool IsWorkersProgressDisplayed { get; set; }
         public int MaxWorkerProgress { get; set; }
+        public bool CanCancel { get; set; }
 
         private int[] _workersProgress { get; set; }
 
         public event EventHandler OkClicked;
+        public event EventHandler CancelClicked;
 
         public OperationProgressForm()
         {
@@ -64,6 +66,8 @@ namespace ParallelFileDivider.Forms
             lblOperationTitle.Text = Title;
             btnOk.Enabled = !inProgress;
             pnlMultipleThreads.Visible = IsWorkersProgressDisplayed;
+            btnCancel.Visible = CanCancel;
+            btnCancel.Enabled = inProgress;
 
             if (inProgress)
             {
@@ -96,6 +100,11 @@ namespace ParallelFileDivider.Forms
         private void btnOk_Click(object sender, EventArgs e)
         {
             OkClicked?.Invoke(this, e);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            CancelClicked?.Invoke(this, e);
         }
     }
 }

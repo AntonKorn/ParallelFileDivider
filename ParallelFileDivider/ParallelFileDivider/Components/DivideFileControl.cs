@@ -66,6 +66,7 @@ namespace ParallelFileDivider.Components
                 OperationStarted();
 
                 var maxProgress = 10000;
+                var cancellationTokenSource = new CancellationTokenSource();
 
                 var divideCommand = new DivideFileCommand()
                 {
@@ -78,11 +79,12 @@ namespace ParallelFileDivider.Components
                     {
                         ExpectedProgressPrecision = maxProgress,
                         ProgressChangedCallback =
-                            progress => operationProgressComponent.UpdateProgress(progress.WorkerNumber, progress.Progress)
+                            progress => operationProgressComponent.UpdateProgress(progress.WorkerNumber, progress.Progress),
+                        CancellationToken = cancellationTokenSource.Token
                     }
                 };
 
-                operationProgressComponent.StartProgress((int)nudParallelThreads.Value, maxProgress);
+                operationProgressComponent.StartProgress((int)nudParallelThreads.Value, maxProgress, cancellationTokenSource);
 
                 var result = await _fileManager.DivideFile(divideCommand);
 

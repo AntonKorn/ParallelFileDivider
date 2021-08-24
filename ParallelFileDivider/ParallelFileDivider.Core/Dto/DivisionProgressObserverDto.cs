@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ParallelFileDivider.Core.Dto
@@ -10,5 +11,6 @@ namespace ParallelFileDivider.Core.Dto
     {
         public Action<(int Progress, int WorkerNumber)> ProgressChangedCallback { get; set; }
         public int ExpectedProgressPrecision { get; set; } = 10000;
+        public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
     }
 }
